@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sample Login</title>
+  <style>
+    :root {
+      --brand: #076bc9;
+      --brand-dark: #0557a3;
+      --text: #1f2933;
+      --muted: #616e7c;
+      --border: #cbd2d9;
+      --error: #c4141d;
+      --bg: #f5f7fa;
+      --radius: 0.5rem;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      font-family: "Open Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+    }
+    .card {
+      width: 100%;
+      max-width: 22rem;
+      padding: 2rem;
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+    h1 { margin: 0 0 1.5rem; font-size: 1.5rem; text-align: center; }
+    .field { margin-bottom: 1rem; }
+    label { display: block; margin-bottom: 0.25rem; font-weight: 600; font-size: 0.875rem; }
+    input {
+      width: 100%;
+      padding: 0.625rem 0.75rem;
+      font-size: 1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    input:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 2px rgba(7, 107, 201, 0.25); }
+    input[aria-invalid="true"] { border-color: var(--error); }
+    .password-row { display: flex; gap: 0.5rem; }
+    .password-row input { flex: 1; }
+    .toggle {
+      padding: 0 0.75rem;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--brand);
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+    .error { min-height: 1rem; margin-top: 0.25rem; color: var(--error); font-size: 0.75rem; }
+    button[type="submit"] {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--brand);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+    }
+    button[type="submit"]:hover { background: var(--brand-dark); }
+    .result { margin-top: 1rem; font-size: 0.875rem; color: var(--muted); text-align: center; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Sign in</h1>
+    <form id="loginForm" novalidate>
+      <div class="field">
+        <label for="loginId">Login ID</label>
+        <input id="loginId" name="loginId" type="text" autocomplete="username" required />
+        <div class="error" id="loginIdError" role="alert"></div>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="password-row">
+          <input id="password" name="password" type="password" autocomplete="current-password" required />
+          <button type="button" class="toggle" id="togglePassword" aria-controls="password">Show</button>
+        </div>
+        <div class="error" id="passwordError" role="alert"></div>
+      </div>
+      <button type="submit">Log in</button>
+    </form>
+    <p class="result" id="result" aria-live="polite"></p>
+  </main>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const loginIdInput = document.getElementById('loginId');
+    const passwordInput = document.getElementById('password');
+    const toggle = document.getElementById('togglePassword');
+    const result = document.getElementById('result');
+
+    function setError(input, message) {
+      document.getElementById(input.id + 'Error').textContent = message;
+      input.setAttribute('aria-invalid', message ? 'true' : 'false');
+    }
+
+    toggle.addEventListener('click', () => {
+      const hidden = passwordInput.type === 'password';
+      passwordInput.type = hidden ? 'text' : 'password';
+      toggle.textContent = hidden ? 'Hide' : 'Show';
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const credentials = {
+        loginId: loginIdInput.value.trim(),
+        password: passwordInput.value
+      };
+
+      setError(loginIdInput, credentials.loginId ? '' : 'Login ID is required.');
+      setError(passwordInput, credentials.password ? '' : 'Password is required.');
+      if (!credentials.loginId || !credentials.password) {
+        result.textContent = '';
+        return;
+      }
+
+      // Replace this with a call to your authentication endpoint (over HTTPS).
+      result.textContent = 'Captured login ID "' + credentials.loginId + '" and a password of ' +
+        credentials.password.length + ' characters.';
+      form.reset();
+      passwordInput.type = 'password';
+      toggle.textContent = 'Show';
+    });
+  </script>
+</body>
+</html>
