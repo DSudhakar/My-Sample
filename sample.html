@@ -133,6 +133,8 @@
       result.textContent = 'Captured login ID "' + credentials.loginId + '" and a password of ' +
         credentials.password.length + ' characters.';
       form.reset();
+      passwordInput.type = 'password';
+      toggle.textContent = 'Show';
     });
   </script>
 </body>
